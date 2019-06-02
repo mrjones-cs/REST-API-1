@@ -10,23 +10,24 @@ import (
 )
 
 type Task struct {
-	ID int
-	Time time.Time
-	Task string
-	Notes string
+	ID       int
+	Time     time.Time
+	Task     string
+	Notes    string
 	Priority int
 }
 
 type Tasks []Task
+
 var AllTasks Tasks
 
 func main() {
 
 	r := mux.NewRouter()
-	r.HandleFunc("/task", taskGetAllHandler).Methods("GET") //GET
-	r.HandleFunc("/task/{id:[0-9]+}", taskGetHandler).Methods("GET") //GET
-	r.HandleFunc("/task", taskPostHandler).Methods("POST") //POST
-	r.HandleFunc("/task/{id:[0-9]+}", taskPutHandler).Methods("PUT") //PUT
+	r.HandleFunc("/task", taskGetAllHandler).Methods("GET")                //GET
+	r.HandleFunc("/task/{id:[0-9]+}", taskGetHandler).Methods("GET")       //GET
+	r.HandleFunc("/task", taskPostHandler).Methods("POST")                 //POST
+	r.HandleFunc("/task/{id:[0-9]+}", taskPutHandler).Methods("PUT")       //PUT
 	r.HandleFunc("/task/{id:[0-9]+}", taskDeleteHandler).Methods("DELETE") //DELETE
 
 	log.Fatal(http.ListenAndServe(":8081", r))
@@ -50,7 +51,7 @@ func taskGetAllHandler(w http.ResponseWriter, r *http.Request) {
 	if AllTasks != nil {
 		json.NewEncoder(w).Encode(AllTasks)
 	} else {
-		w.WriteHeader(http.StatusNotFound)
+		http.Error(w, "No Tasks Defined", http.StatusNotFound)
 	}
 
 }
@@ -70,8 +71,7 @@ func taskGetHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Didn't find anything
-	w.WriteHeader(http.StatusNotFound)
-
+	http.Error(w, "No Task Found", http.StatusNotFound)
 }
 
 func taskPostHandler(w http.ResponseWriter, r *http.Request) {
@@ -109,7 +109,7 @@ func taskPutHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Didn't find anything
-	w.WriteHeader(http.StatusNotFound)
+	http.Error(w, "No Tasks Found", http.StatusNotFound)
 }
 
 func taskDeleteHandler(w http.ResponseWriter, r *http.Request) {
@@ -128,10 +128,5 @@ func taskDeleteHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Didn't find anything
-	w.WriteHeader(http.StatusNotFound)
+	http.Error(w, "No Task Found", http.StatusNotFound)
 }
-
-
-
-
-

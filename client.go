@@ -7,20 +7,25 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"time"
 )
 
-type Task struct {
+type ClientTask struct {
 	ID       int
-	Time     time.Time
 	Task     string
 	Notes    string
 	Priority int
 }
 
+var curID int
+
 func main() {
 
-	post()
+	//Create 10 Tasks
+	for i := 0; i < 10; i++ {
+		post()
+	}
+
+	//Retrieve All Tasks
 	get()
 }
 
@@ -38,9 +43,10 @@ func get() {
 
 func post() {
 
-	var newTask Task
-	newTask.ID = 12
-	newTask.Time = time.Now()
+	curID++
+
+	var newTask ClientTask
+	newTask.ID = curID
 	newTask.Task = "We need to do some work"
 	newTask.Notes = "Here are some notes"
 	newTask.Priority = 99

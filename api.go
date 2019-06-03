@@ -97,7 +97,6 @@ func taskPutHandler(w http.ResponseWriter, r *http.Request) {
 	//Update the element
 	for i, v := range AllTasks {
 		if v.ID == id {
-			v.ID = newTask.ID
 			v.Time = time.Now()
 			v.Task = newTask.Task
 			v.Notes = newTask.Notes
